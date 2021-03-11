@@ -40,15 +40,15 @@ void spi_w8( SPI_TypeDef *SPIx, uint8_t dat ) {
   while ( !( SPIx->SR & SPI_SR_TXE ) ) {};
   *( uint8_t* )&( SPIx->DR ) = dat;
   // Dummy receive.
-//  while( !( SPIx->SR & SPI_SR_RXNE ) ) {};
-//  uint8_t dr = *( uint8_t* )&( SPIx->DR );
+  while( !( SPIx->SR & SPI_SR_RXNE ) ) {};
+  uint8_t dr = *( uint8_t* )&( SPIx->DR );
 }
 
 // Receive a byte of data over SPI (blocking)
 uint8_t spi_r8( SPI_TypeDef *SPIx ) {
   // Transmit a dummy byte once the peripheral is ready.
-//  while ( !( SPIx->SR & SPI_SR_TXE ) ) {};
-//  *( uint8_t* )&( SPIx->DR ) = 0x00;
+  while ( !( SPIx->SR & SPI_SR_TXE ) ) {};
+  *( uint8_t* )&( SPIx->DR ) = 0x00;
   // Wait to receive a byte of data, then return it.
   while( !( SPIx->SR & SPI_SR_RXNE ) ) {};
   return *( uint8_t* )&( SPIx->DR );
