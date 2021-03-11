@@ -2,10 +2,6 @@
 #define _VVC_RFM95W
 
 /*
- * LoRa register address and bitfield definitions for
- * RFM95W radio modules, silicon revision 0x12. Datasheet:
- * https://www.hoperf.com/data/upload/portal/20190801/RFM95W-V2.0.pdf
- *
  * This header file only describes a minimal subset of the available
  * registers and bitfields, and it does not include any definitions
  * for FSK/OOK modulation. It is meant for trivial LoRa applications.
