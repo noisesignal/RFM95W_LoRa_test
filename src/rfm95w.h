@@ -97,4 +97,3 @@
 // 'signal detected'
 #define RF_MDM_SIG       ( 0x01 )
 
-#endif
