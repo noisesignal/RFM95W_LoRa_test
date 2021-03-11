@@ -1,3 +1,5 @@
+// RM0394 https://www.st.com/resource/en/reference_manual/dm00151940-stm32l41xxx42xxx43xxx44xxx45xxx46xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf
+
 #include "main.h"
 
 // Default system clock frequency.
@@ -52,7 +54,7 @@ uint8_t spi_r8( SPI_TypeDef *SPIx ) {
   return *( uint8_t* )&( SPIx->DR );
 }
 
-// Logic to read a register from the RFM95W module.
+// Logic to read a register from the RF-LORA-868 module.
 uint8_t read_rf_reg( uint8_t addr ) {
   // Assert CS signal.
   GPIOA->ODR &= ~( 0x1 << 11 );
@@ -65,7 +67,7 @@ uint8_t read_rf_reg( uint8_t addr ) {
   return rx;
 }
 
-// Logic to write a register in the RFM95W module.
+// Logic to write a register in the RF-LORA-868 module.
 void write_rf_reg( uint8_t addr, uint8_t data ) {
   // Assert CS signal.
   GPIOA->ODR &= ~( 0x1 << 11 );
@@ -105,7 +107,7 @@ int main(void) {
   RCC->APB2ENR  |= ( RCC_APB2ENR_SPI1EN );
   RCC->AHB2ENR  |= ( RCC_AHB2ENR_GPIOAEN |
                      RCC_AHB2ENR_GPIOBEN );
-
+  //
   // UART TX pin setup (AF7).
   GPIOA->MODER    &= ~( 0x3 << ( 2 * 2 ) );
   GPIOA->MODER    |=  ( 0x2 << ( 2 * 2 ) );
@@ -134,7 +136,9 @@ int main(void) {
   GPIOA->OSPEEDR  &= ~( 0x3 << ( 11 * 2 ) );
   GPIOA->OSPEEDR  |=  ( 0x1 << ( 11 * 2 ) );
   GPIOA->ODR      |=  ( 0x1 << 11 );
+
   // PA5, PA6, PA7: hardware-controlled SPI SCK/MISO/MOSI pins (AF5) respectively.
+  // p55 https://www.st.com/resource/en/datasheet/stm32l432kc.pdf
   GPIOA->MODER    &= ~( ( 0x3 << ( 5 * 2 ) ) |
                         ( 0x3 << ( 6 * 2 ) ) |
                         ( 0x3 << ( 7 * 2 ) ) );
