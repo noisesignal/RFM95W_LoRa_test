@@ -115,6 +115,17 @@ int main(void) {
   GPIOA->AFR[ 0 ] &= ~( 0xF << ( 2 * 4 ) );
   GPIOA->AFR[ 0 ] |=  ( 0x7 << ( 2 * 4 ) );
 
+
+  //send reset signal from PB1 
+  GPIOB->MODER    &= ~( 0x3 << ( 1 * 2 ) );
+  GPIOB->MODER    |=  ( 0x1 << ( 1 * 2 ) );
+  GPIOB->OTYPER    &= ~( 0x1 <<  1 );
+//  GPIOB->OTYPER   |=  ( 0x1 << 1 );
+  GPIOB->PUPDR    &= ~( 0x3 << ( 1 * 2 ) );
+  GPIOB->PUPDR   |=  ( 0x1 << ( 1 * 2 ) );
+//  GPIOB->BSRR    |= ( 0x1 <<  17 );
+
+
   // SPI pins setup.
   // PA11: software-controlled CS pin.
   GPIOA->MODER    &= ~( 0x3 << ( 11 * 2 ) );
@@ -123,25 +134,31 @@ int main(void) {
   GPIOA->OSPEEDR  &= ~( 0x3 << ( 11 * 2 ) );
   GPIOA->OSPEEDR  |=  ( 0x1 << ( 11 * 2 ) );
   GPIOA->ODR      |=  ( 0x1 << 11 );
-  // PB3, PB4, PB5: hardware-controlled SPI SCK/MISO/MOSI pins (AF5).
-  GPIOB->MODER    &= ~( ( 0x3 << ( 3 * 2 ) ) |
-                        ( 0x3 << ( 4 * 2 ) ) |
-                        ( 0x3 << ( 5 * 2 ) ) );
-  GPIOB->MODER    |=  ( ( 0x2 << ( 3 * 2 ) ) |
-                        ( 0x2 << ( 4 * 2 ) ) |
-                        ( 0x2 << ( 5 * 2 ) ) );
-  GPIOB->OSPEEDR  &= ~( ( 0x3 << ( 3 * 2 ) ) |
-                        ( 0x3 << ( 4 * 2 ) ) |
-                        ( 0x3 << ( 5 * 2 ) ) );
-  GPIOB->OSPEEDR  |=  ( ( 0x2 << ( 3 * 2 ) ) |
-                        ( 0x2 << ( 4 * 2 ) ) |
-                        ( 0x2 << ( 5 * 2 ) ) );
-  GPIOB->AFR[ 0 ] &= ~( ( 0xF << ( 3 * 4 ) ) |
-                        ( 0xF << ( 4 * 4 ) ) |
-                        ( 0xF << ( 5 * 4 ) ) );
-  GPIOB->AFR[ 0 ] |=  ( ( 0x5 << ( 3 * 4 ) ) |
-                        ( 0x5 << ( 4 * 4 ) ) |
-                        ( 0x5 << ( 5 * 4 ) ) );
+  // PA5, PA6, PA7: hardware-controlled SPI SCK/MISO/MOSI pins (AF5) respectively.
+  GPIOA->MODER    &= ~( ( 0x3 << ( 5 * 2 ) ) |
+                        ( 0x3 << ( 6 * 2 ) ) |
+                        ( 0x3 << ( 7 * 2 ) ) );
+  GPIOA->MODER    |=  ( ( 0x2 << ( 5 * 2 ) ) |
+                        ( 0x2 << ( 6 * 2 ) ) |
+                        ( 0x2 << ( 7 * 2 ) ) );
+  GPIOA->OSPEEDR  &= ~( ( 0x3 << ( 5 * 2 ) ) |
+                        ( 0x3 << ( 6 * 2 ) ) |
+                        ( 0x3 << ( 7 * 2 ) ) );
+  GPIOA->OSPEEDR  |=  ( ( 0x2 << ( 5 * 2 ) ) |
+                        ( 0x2 << ( 6 * 2 ) ) |
+                        ( 0x2 << ( 7 * 2 ) ) );
+ GPIOA->PUPDR  &= ~( ( 0x3 << ( 5 * 2 ) ) |
+                        ( 0x3 << ( 6 * 2 ) ) |
+                        ( 0x3 << ( 7 * 2 ) ) );
+  GPIOA->PUPDR  |=  ( ( 0x2 << ( 5 * 2 ) ) |
+                        ( 0x2 << ( 6 * 2 ) ) |
+                        ( 0x2 << ( 7 * 2 ) ) );
+  GPIOA->AFR[ 0 ] &= ~( ( 0xF << ( 5 * 4 ) ) |
+                        ( 0xF << ( 6 * 4 ) ) |
+                        ( 0xF << ( 7 * 4 ) ) );
+  GPIOA->AFR[ 0 ] |=  ( ( 0x5 << ( 5 * 4 ) ) |
+                        ( 0x5 << ( 6 * 4 ) ) |
+                        ( 0x5 << ( 7 * 4 ) ) );
 
   // UART setup: 115200 baud, transmit only.
   USART2->BRR  = ( core_clock_hz / 115200 );
@@ -160,7 +177,16 @@ int main(void) {
 
   // Debug: wait 5 seconds before starting, to give a meatbag time
   // to connect to the UART output after plugging the device in.
-  delay_ms( 5000 );
+  delay_ms( 200 );
+  
+  GPIOB->BSRR    |= ( 0x1 <<  17 );
+  delay_ms( 200 );
+  GPIOB->BSRR    |=  ( 0x1 <<  1 );
+  delay_ms( 200 );
+  GPIOB->BSRR    |=  ( 0x1 <<  17 );
+  delay_ms( 100 );
+
+
 
   uint8_t reg;
   printf( "Configure RFM95W for LoRa communication...\r\n" );
@@ -171,6 +197,9 @@ int main(void) {
   while ( ( reg & RF_OP_MD ) != RF_OP_MD_SLEEP ) {
     reg = read_rf_reg( RF_OPMODE );
   }
+
+  reg = read_rf_reg( RF_ID );
+  printf( "RegOpMode: 0x%02X\r\n", reg );
 
   // These end blocks should never be reached.
   while ( 1 ) {};
