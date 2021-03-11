@@ -177,14 +177,16 @@ int main(void) {
 
   // Debug: wait 5 seconds before starting, to give a meatbag time
   // to connect to the UART output after plugging the device in.
-  delay_ms( 200 );
-  
+
+//  https://semtech.my.salesforce.com/sfc/p/#E0000000JelG/a/440000001NCE/v_VBhk1IolDgxwwnOpcS_vTFxPfSEPQbuneK3mWsXlU -> p 115
+//  Send reset signal from PB1
+
   GPIOB->BSRR    |= ( 0x1 <<  17 );
   delay_ms( 200 );
   GPIOB->BSRR    |=  ( 0x1 <<  1 );
-  delay_ms( 200 );
-  GPIOB->BSRR    |=  ( 0x1 <<  17 );
   delay_ms( 100 );
+  GPIOB->BSRR    |=  ( 0x1 <<  17 );
+  delay_ms( 5 );
 
 
 
@@ -199,7 +201,7 @@ int main(void) {
   }
 
   reg = read_rf_reg( RF_ID );
-  printf( "RegOpMode: 0x%02X\r\n", reg );
+  printf( "Revision Id: 0x%02X\r\n", reg );
 
   // These end blocks should never be reached.
   while ( 1 ) {};
