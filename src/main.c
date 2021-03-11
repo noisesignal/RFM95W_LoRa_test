@@ -40,15 +40,15 @@ void spi_w8( SPI_TypeDef *SPIx, uint8_t dat ) {
   while ( !( SPIx->SR & SPI_SR_TXE ) ) {};
   *( uint8_t* )&( SPIx->DR ) = dat;
   // Dummy receive.
-  while( !( SPIx->SR & SPI_SR_RXNE ) ) {};
-  uint8_t dr = *( uint8_t* )&( SPIx->DR );
+//  while( !( SPIx->SR & SPI_SR_RXNE ) ) {};
+//  uint8_t dr = *( uint8_t* )&( SPIx->DR );
 }
 
 // Receive a byte of data over SPI (blocking)
 uint8_t spi_r8( SPI_TypeDef *SPIx ) {
   // Transmit a dummy byte once the peripheral is ready.
-  while ( !( SPIx->SR & SPI_SR_TXE ) ) {};
-  *( uint8_t* )&( SPIx->DR ) = 0xFF;
+//  while ( !( SPIx->SR & SPI_SR_TXE ) ) {};
+//  *( uint8_t* )&( SPIx->DR ) = 0x00;
   // Wait to receive a byte of data, then return it.
   while( !( SPIx->SR & SPI_SR_RXNE ) ) {};
   return *( uint8_t* )&( SPIx->DR );
@@ -125,7 +125,7 @@ int main(void) {
 //  GPIOB->OTYPER   |=  ( 0x1 << 1 );
   GPIOB->PUPDR    &= ~( 0x3 << ( 1 * 2 ) );
   GPIOB->PUPDR   |=  ( 0x1 << ( 1 * 2 ) );
-//  GPIOB->BSRR    |= ( 0x1 <<  17 );
+  GPIOB->BSRR    |= ( 0x1 <<  17 );
 
 
   // SPI pins setup.
@@ -188,15 +188,15 @@ int main(void) {
   GPIOB->BSRR    |= ( 0x1 <<  17 );
   delay_ms( 200 );
   GPIOB->BSRR    |=  ( 0x1 <<  1 );
-  delay_ms( 100 );
+  delay_ms( 200 );
   GPIOB->BSRR    |=  ( 0x1 <<  17 );
-  delay_ms( 5 );
-
-
+   // GPIOB->OTYPER    |= ( 0x1 <<  1 );
+  delay_ms( 100 );
 
   uint8_t reg;
-  printf( "Configure RFM95W for LoRa communication...\r\n" );
+  printf( "Configure RF-LORA-868 for LoRa communication...\r\n" );
   // Set 'RegOpMode' to sleep mode, and clear all other flags.
+
   write_rf_reg( RF_OPMODE, RF_OP_MD_SLEEP );
   // Wait for the module to go to sleep.
   reg = read_rf_reg( RF_OPMODE );
@@ -216,3 +216,6 @@ int main(void) {
 void SysTick_IRQn_handler( void ) {
   ++systick;
 }
+
+
+
