@@ -1,14 +1,10 @@
 # RFM95W LoRa Test Program
 
-This is a simple application demonstrating how to transmit and receive LoRa messages using the HopeRF `RFM95W` radio modules, which seem to use `SX1276` chips:
+This is a simple application demonstrating how to transmit and receive LoRa messages using the RFsolutions.co.uk "RF-LORA-868" radio modules, which seem to use `SX1276` chips:
 
-https://www.digikey.com/short/zzfzbm
 
-Note that these modules don't include an antenna. You can either make one out of a length of wire, or buy one for your target frequency (915MHz in this example). Either way, solder it to the pin marked `ANA` on the silkscreen.
+Note that these modules don't include an antenna. You can either make one out of a length of wire, or buy one for your target frequency (868MHz in this example). Either way, solder it to the pin marked `ANA` on the silkscreen.
 
-For more information, check the datasheet, especially the 'register map' sections:
-
-https://www.hoperf.com/data/upload/portal/20190801/RFM95W-V2.0.pdf
 
 If you get a cheap radio module from the usual bargain-bin sources, it may have an older revision of the chip. You can tell by checking the `RegVersion` register at address `0x42`. Current versions should return `0x12`; if you get `0x11`, this datasheet will apply instead:
 
