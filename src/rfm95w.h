@@ -1,5 +1,3 @@
-#ifndef _VVC_RFM95W
-#define _VVC_RFM95W
 
 /*
  * This header file only describes a minimal subset of the available
