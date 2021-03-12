@@ -1,6 +1,6 @@
 # RFM95W LoRa Test Program
 
-This is a simple application demonstrating how to transmit and receive LoRa messages using the RFsolutions.co.uk "RF-LORA-868" radio modules, which seem to use `SX1276` chips:
+This is a simple application demonstrating how to transmit and receive LoRa messages using the RFsolutions.co.uk "RF-LORA-868" radio modules, which seem to use `SX1272` chips:
 
 
 Note that these modules don't include an antenna. You can either make one out of a length of wire, or buy one for your target frequency (868MHz in this example). Either way, solder it to the pin marked `ANA` on the silkscreen.
