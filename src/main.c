@@ -178,9 +178,7 @@ int main(void) {
   // Without this, the RXNE flag will not get set for single bytes.
   SPI1->CR2 |= ( SPI_CR2_FRXTH );
   SPI1->CR1 |= ( SPI_CR1_SPE );
-
-  // Debug: wait 5 seconds before starting, to give a meatbag time
-  // to connect to the UART output after plugging the device in.
+ 
 
 //  https://semtech.my.salesforce.com/sfc/p/#E0000000JelG/a/440000001NCE/v_VBhk1IolDgxwwnOpcS_vTFxPfSEPQbuneK3mWsXlU -> p 115
 //  Send reset signal from PB1
